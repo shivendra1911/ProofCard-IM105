@@ -114,9 +114,14 @@ export const VivaArena: React.FC<VivaArenaProps> = ({
     );
   }
 
+  const isCandidateNonTech = Boolean(
+    candidate?.stream_track === 'NON_TECHNICAL' || 
+    /mba|business|product|marketing|recruiter|hr|design|sales|operations/i.test(candidate?.project_type || '')
+  );
+
   const initialSetup = useMemo(
-    () => ensureTenVivaQuestions(candidate),
-    [candidate?.candidate_id]
+    () => isCandidateNonTech ? { questions: candidate?.viva_questions || [], complexFunctions: [] } : ensureTenVivaQuestions(candidate),
+    [candidate?.candidate_id, isCandidateNonTech]
   );
   const [isVivaActive, setIsVivaActive] = useState<boolean>(false);
   const [questions, setQuestions] = useState<VivaQuestion[]>(initialSetup.questions);
